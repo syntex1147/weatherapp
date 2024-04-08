@@ -14,7 +14,7 @@ import humidity_icon from '../Assets/humidity.png'
 
 const WeatherApp = () => {
 
-    let api_key = "e57f2616846cbb956768442075b89a01"
+    const api_key = process.env.REACT_APP_WEATHER_API_KEY;
 
     const [wicon,setWicon] = useState(cloud_icon);
 
@@ -24,7 +24,11 @@ const WeatherApp = () => {
         {
             return 0;
         }
-        let url = `https://api.openweathermap.org/data/2.5/weather?q= ${element[0].value}&units=imperial&appid=${api_key}`;
+        if (!api_key) {
+            console.error("Missing REACT_APP_WEATHER_API_KEY. Add it to a .env file at the project root.");
+            return 0;
+        }
+        let url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(element[0].value)}&units=imperial&appid=${api_key}`;
 
         let response = await fetch(url);
         let data = await response.json();
